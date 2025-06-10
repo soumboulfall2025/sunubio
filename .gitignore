@@ -1,0 +1,15 @@
+# Ignore tous les node_modules du projet
+node_modules/
+
+# Fichiers d'environnement
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+
+# Systèmes
+.DS_Store
+Thumbs.db
