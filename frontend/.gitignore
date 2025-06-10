@@ -26,13 +26,7 @@ coverage/
 .cache/
 .eslintcache
 
-# Static assets (si générés dynamiquement)
-*.png
-*.jpg
-*.jpeg
-*.webp
-*.svg
-*.ico
+
 
 # Editor
 .vscode/*
