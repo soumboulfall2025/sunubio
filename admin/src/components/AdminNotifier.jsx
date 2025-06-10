@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 
 // Initialise la connexion Socket.IO (remplace par l'URL de ton backend)
-const socket = io("http://localhost:4000", {
+const socket = io("https://sunubio-backend.onrender.com", {
   reconnectionAttempts: 5, // Nombre de tentatives de reconnexion
   reconnectionDelay: 1000, // Délai entre les tentatives de reconnexion
 });

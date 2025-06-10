@@ -12,7 +12,7 @@ import "react-toastify/dist/ReactToastify.css"
 
 import AdminNotifier from './components/AdminNotifier' // <-- import ici
 
-export const backendUrl = "http://localhost:4000"
+export const backendUrl = "https://sunubio-backend.onrender.com"
 export const currency = "F CFA"
 
 const App = () => {
