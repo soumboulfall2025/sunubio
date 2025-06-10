@@ -1,4 +1,4 @@
-import arrowsRotate from './arrows-rotate-solid.png';
+import arrowsRotate from './exchange.png';
 import bars from './bars-solid.png';
  import cartShopping from './cart-shopping-solid.png'; // <-- Commentez si le fichier n'existe pas
 // import trash from './trash-solid.png'; // <-- Commentez si le fichier n'existe pas
