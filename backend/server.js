@@ -24,6 +24,8 @@ const allowedOrigins = [
   "http://localhost:5173", // Vite par défaut
   "http://localhost:5174", // Ton port actuel
   "http://localhost:4000", // Autre port si nécessaire
+  "https://sunubio-admin.onrender.com", // Admin Render
+  "https://sunubio-frontend.onrender.com", // Frontend Render
   
 ]
 
