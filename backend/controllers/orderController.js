@@ -3,12 +3,12 @@ import userModel from "../models/userModel.js";
 import productModel from "../models/productModel.js";
 
 import paydunya from "paydunya";
-import { setup, store } from "../config/paydunyaConfig.js"
+import  "../config/paydunyaConfig.js"
 import { io } from "../server.js";
 
 
 
-const frontend_URL = "https://bambaelectro-frontend.onrender.com/"
+const frontend_URL = "https://sunubio-frontend.onrender.com/"
 
 
 
@@ -75,7 +75,6 @@ const placeOrderStripe = async (req, res) => {
 // Placing order using paydunya method
 const placeOrderPaydunya = async (req, res) => {
   try {
-    setup();
 
     const { items, amount } = req.body;
 
