@@ -10,6 +10,7 @@ import retour from './certificate-solid.png';
 import dropdown from './caret-down-solid.png';
 import hero from './hero.jpg'; // <-- Assurez-vous que ce fichier existe
 import logo from './logo.jpeg'; // <-- Assurez-vous que ce fichier existe
+import paydunyaLogo from './paydunya.png'; // <-- Assurez-vous que ce fichier existe
 // import star from './star-solid.png'; // <-- Commentez si le fichier n'existe pas
 import bin from './bin_icon.png'
 
@@ -35,6 +36,7 @@ const assets = {
     // Ajoutez ici vos images si besoin
     hero,
     logo,
+    paydunyaLogo
   },
   products, // Les produits sont maintenant importés proprement
 };

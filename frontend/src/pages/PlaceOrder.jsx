@@ -80,13 +80,13 @@ const PlaceOrder = () => {
             )
             const rawMessage = `Bonjour, je suis ${formData.firstName} ${formData.lastName}
              Je viens de passer une commande d’un montant total de ${total} FCFA
-             dans votre site web Bamba_Electro
+             dans votre site web Sunubio & Co.
              Voici le détail de ma commande :${productListText}
              📞 Tel : ${formData.phone}`
             const message = encodeURIComponent(rawMessage);
 
 
-            const whatsappUrl = `https://wa.me/221772922833?text=${message}`;
+            const whatsappUrl = `https://wa.me/221787203975?text=${message}`;
 
             setOrderStatus(response.data.message);
             setErrorStatus(null);
@@ -202,17 +202,31 @@ const PlaceOrder = () => {
 
         <div className='mt-12'>
           <Title text1="PAYMENT" text2="METHOD" />
-          <div className='flex gap-3 flex-col lg:flex-row'>
-            <div onClick={() => setMethod('cod')} className='flex items-center gap-3 border p-2 px-3 cursor-pointer'>
-              <p className={`min-w-3.5 h-3.5 border rounded-full ${method === 'cod' ? 'bg-green-400' : ''}`} />
-              <p className='text-gray-500 text-sm font-medium mx-4'>CASH ON DELIVERY</p>
+          {/* Méthodes de paiement compactes et alignées */}
+          <div className='flex gap-3 flex-col lg:flex-row mt-4'>
+            {/* Cash on delivery */}
+            <div
+              onClick={() => setMethod('cod')}
+              className={`flex items-center gap-2 border rounded-lg p-2 px-3 cursor-pointer transition ${method === 'cod' ? 'border-green-400 bg-green-50' : 'border-gray-200 bg-white'}`}
+              style={{ minWidth: 160 }}
+            >
+              <span className={`inline-block w-4 h-4 border rounded-full mr-2 ${method === 'cod' ? 'bg-green-400 border-green-400' : 'bg-white border-gray-300'}`} />
+              <span className='text-gray-700 text-sm font-medium'>Cash on delivery</span>
             </div>
-          </div>
 
-           <div className='flex gap-3 flex-col lg:flex-row'>
-            <div onClick={() => setMethod('paydunya')} className='flex items-center gap-3 border p-2 px-3 cursor-pointer'>
-              <p className={`min-w-3.5 h-3.5 border rounded-full ${method === 'paydunya' ? 'bg-green-400' : ''}`} />
-              <p className='text-gray-500 text-sm font-medium mx-4'>MOBILE MONEY </p>
+            {/* PayDunya */}
+            <div
+              onClick={() => setMethod('paydunya')}
+              className={`flex items-center gap-2 border rounded-lg p-2 px-3 cursor-pointer transition ${method === 'paydunya' ? 'border-green-400 bg-green-50' : 'border-gray-200 bg-white'}`}
+              style={{ minWidth: 160 }}
+            >
+              <span className={`inline-block w-4 h-4 border rounded-full mr-2 ${method === 'paydunya' ? 'bg-green-400 border-green-400' : 'bg-white border-gray-300'}`} />
+              <img
+                src={assets.images.paydunyaLogo}
+                alt="PayDunya"
+                style={{ height: 20, width: 'auto', marginRight: 6 }}
+              />
+              <span className='text-gray-700 text-sm font-medium'>Mobile Money</span>
             </div>
           </div>
 

@@ -8,7 +8,7 @@ const setup = new paydunya.Setup({
   privateKey: process.env.PAYDUNYA_PRIVATE_KEY,
   publicKey: process.env.PAYDUNYA_PUBLIC_KEY,
   token: process.env.PAYDUNYA_TOKEN,
-  mode: 'live', // ou 'live'
+  mode: 'live', 
 });
 
 const store = new paydunya.Store({
@@ -19,9 +19,5 @@ const store = new paydunya.Store({
   websiteURL: 'https://sunubio-frontend.onrender.com', // ⚠️ camelCase
   logoURL: 'https://sunubio-frontend.onrender.com/logo.png', // ⚠️ camelCase
 });
-
-console.log("setup:", setup);
-console.log("store:", store);
-console.log("PUBLIC_KEY process.env:", process.env.PAYDUNYA_PUBLIC_KEY);
 
 export { setup, store };
