@@ -74,107 +74,28 @@ const placeOrderStripe = async (req, res) => {
 
 // Placing order using paydunya method
 const placeOrderPaydunya = async (req, res) => {
-  console.log("=== placeOrderPaydunya called ===");
+  const invoice = new paydunya.CheckoutInvoice();
 
-  try {
-    const { address, items, amount } = req.body;
-    const userId = req.user.id;
 
-    console.log("Reçu du client :", { address, items, amount, userId });
+  invoice.addItem("Produit Premium", 1, 10000, 10000); nom, quantité, prix , total
 
-    if (!address || !items || !amount) {
-      return res.status(400).json({ success: false, message: "Informations manquantes" });
-    }
+  invoice.description = "Achat d’un produit premium";
+  invoice.totalAmount = 10000;
 
-    const newOrder = new orderModel({
-      userId,
-      address,
-      items,
-      amount,
-      paymentMethod: "paydunya",
-      paymentStatus: "pending",
-      date: new Date(),
-    });
-
-    await newOrder.save();
-    await userModel.findByIdAndUpdate(userId, { cartData: {} });
-
-    console.log("Commande sauvegardée:", newOrder._id);
-
-    const invoice = new paydunya.CheckoutInvoice(setup, store);
-    console.log("Invoice initialisée avec setup et store");
-
-    for (const item of items) {
-      if (!item.name || !item.quantity || !item.price) continue;
-      const unitPrice = Number(item.price);
-      const quantity = Number(item.quantity);
-      const totalPrice = unitPrice * quantity;
-
-      invoice.addItem(item.name, quantity, unitPrice, totalPrice);
-      console.log(`Item ajouté : ${item.name} x${quantity} à ${unitPrice} USD`);
-    }
-
-    const usdToFcfaRate = 600;
-    const amountInFCFA = Math.round(amount * usdToFcfaRate);
-
-    if (amountInFCFA < 200) {
-      return res.status(400).json({
-        success: false,
-        message: "Le montant est trop bas pour PayDunya (minimum : 200 FCFA)",
+  invoice.create((response) => {
+    if (response.success) {
+      return res.json({
+        success: true,
+        message: 'Facture générée avec succès',
+        redirect_url: invoice.url
       });
-    }
-
-    invoice.totalAmount = amountInFCFA;
-    invoice.description = `Commande #${newOrder._id} chez Bamba Electro`;
-    invoice.addCustomData("orderId", newOrder._id.toString());
-
-    console.log("Création de la facture PayDunya...",invoice);
-
-    try {
-     const invoice = await invoice.create();
-   
-     
-
-      // Log réponse brute
-      const rawResponse = invoice.responseText;
-      console.log("Réponse brute de PayDunya :", rawResponse);
-
-    
-    
-      console.log("ceci est ", response);
-      
-      const redirectUrl = response.invoice_url;
-    
-
-      if (!redirectUrl) {
-        return res.status(500).json({
-          success: false,
-          message: "URL de facture manquante dans la réponse PayDunya",
-          details: response,
-        });
-      }
-
-      console.log("Facture créée avec succès !");
-      return res.status(200).json({ success: true, redirectUrl });
-
-    } catch (err) {
-      console.error("Erreur lors de invoice.create():", err?.response?.text || err.message || err);
-      console.error("Code réponse:", invoice.response_code);
-      console.error("Message réponse:", invoice.response_text);
-
+    } else {
       return res.status(500).json({
         success: false,
-        message: "Erreur lors de la création de la facture PayDunya",
-        details: invoice.response_text,
+        message: response.response_text
       });
     }
-
-  } catch (error) {
-    console.error("Erreur dans placeOrderPaydunya:", error);
-    if (!res.headersSent) {
-      return res.status(500).json({ success: false, message: "Erreur serveur" });
-    }
-  }
+  });
 };
 
 

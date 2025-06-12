@@ -9,18 +9,17 @@ const setup = new paydunya.Setup({
   publicKey: process.env.PAYDUNYA_PUBLIC_KEY,    // Clé production
   token: process.env.PAYDUNYA_TOKEN,              // Clé production
   mode: 'live',                                  // mode production
-  baseURL: "https://app.paydunya.com/api/v1",    // URL API live (optionnel si mode live)
+      // URL API live (optionnel si mode live)
 });
 
 
 const store = new paydunya.Store({
-  name: 'Bamba Electro',
+  name: 'Sunubio & Co',
   tagline: 'Votre boutique de confiance',
-  phoneNumber: '771234567',
+  phoneNumber: '787203975',
   postalAddress: 'Dakar, Sénégal',
-  websiteUrl: 'https://bambaelectro.com',
-  logoUrl: 'https://bambaelectro.com/logo.png',
-  callbackURL: 'https://bambaelectro.com/callbackurl'
+  websiteUrl: 'https://sunubio-frontend.onrender.com',
+  logoUrl: 'https://sunubio-frontend.onrender.com/logo.png',
 });
 
 export { setup, store };
