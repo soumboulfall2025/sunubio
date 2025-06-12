@@ -84,7 +84,6 @@ const placeOrderPaydunya = async (req, res) => {
       return res.status(400).json({ success: false, message: "Aucun produit dans la commande." });
     }
 
-    // ✅ Correction ici : passe setup et store au constructeur
     const invoice = new paydunya.CheckoutInvoice(setup, store);
 
     items.forEach(item => {
@@ -100,25 +99,33 @@ const placeOrderPaydunya = async (req, res) => {
     invoice.description = "Achat sur Sunubio";
     invoice.totalAmount = amount;
 
-    invoice.create((response) => {
-      console.log("Réponse PayDunya API :", response);
-
-      if (response.success) {
-        return res.json({
-          success: true,
-          message: 'Facture générée avec succès',
-          redirectUrl: invoice.url
-        });
-      } else {
-        console.error("Erreur PayDunya (réponse API):", response);
+    // Utilisation de la promesse pour éviter le blocage
+    invoice.create()
+      .then(() => {
+        console.log("Réponse PayDunya API :", invoice);
+        if (invoice.status === "created" && invoice.url) {
+          return res.json({
+            success: true,
+            message: 'Facture générée avec succès',
+            redirectUrl: invoice.url
+          });
+        } else {
+          return res.status(500).json({
+            success: false,
+            message: invoice.responseText || "Erreur PayDunya"
+          });
+        }
+      })
+      .catch((e) => {
+        console.error("Erreur PayDunya (catch):", e);
         return res.status(500).json({
           success: false,
-          message: response.response_text || "Erreur PayDunya"
+          message: "Erreur serveur PayDunya",
+          error: e.message
         });
-      }
-    });
+      });
   } catch (error) {
-    console.error("Erreur PayDunya (catch):", error);
+    console.error("Erreur PayDunya (catch global):", error);
     return res.status(500).json({
       success: false,
       message: "Erreur serveur PayDunya",
