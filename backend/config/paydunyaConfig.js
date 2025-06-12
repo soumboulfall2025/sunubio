@@ -22,5 +22,6 @@ const store = new paydunya.Store({
 
 console.log("setup:", setup);
 console.log("store:", store);
+console.log("PUBLIC_KEY process.env:", process.env.PAYDUNYA_PUBLIC_KEY);
 
 export { setup, store };
