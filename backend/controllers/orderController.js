@@ -75,10 +75,8 @@ const placeOrderStripe = async (req, res) => {
 // Placing order using paydunya method
 const placeOrderPaydunya = async (req, res) => {
   try {
-
     const { items, amount } = req.body;
 
-    // Log des données reçues
     console.log("PayDunya - items reçus :", items);
     console.log("PayDunya - amount reçu :", amount);
 
@@ -86,15 +84,16 @@ const placeOrderPaydunya = async (req, res) => {
       return res.status(400).json({ success: false, message: "Aucun produit dans la commande." });
     }
 
-    const invoice = new paydunya.CheckoutInvoice();
+    // ✅ Correction ici : passe setup et store au constructeur
+    const invoice = new paydunya.CheckoutInvoice(setup, store);
 
     items.forEach(item => {
-      console.log("Ajout item PayDunya :", item);
       invoice.addItem(
         item.name || "Produit",
         item.quantity || 1,
         item.price || 1000,
-        (item.price || 1000) * (item.quantity || 1)
+        (item.price || 1000) * (item.quantity || 1),
+        item.description || ""
       );
     });
 
@@ -102,7 +101,6 @@ const placeOrderPaydunya = async (req, res) => {
     invoice.totalAmount = amount;
 
     invoice.create((response) => {
-      // Log de la réponse brute PayDunya
       console.log("Réponse PayDunya API :", response);
 
       if (response.success) {
