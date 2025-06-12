@@ -103,7 +103,8 @@ const placeOrderPaydunya = async (req, res) => {
     invoice.create()
       .then(() => {
         console.log("Réponse PayDunya API :", invoice);
-        if (invoice.status === "created" && invoice.url) {
+        // Accepte "pending" ou "created" comme succès
+        if ((invoice.status === "created" || invoice.status === "pending") && invoice.url) {
           return res.json({
             success: true,
             message: 'Facture générée avec succès',
