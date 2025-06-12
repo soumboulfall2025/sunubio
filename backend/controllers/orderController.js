@@ -74,28 +74,52 @@ const placeOrderStripe = async (req, res) => {
 
 // Placing order using paydunya method
 const placeOrderPaydunya = async (req, res) => {
-  const invoice = new paydunya.CheckoutInvoice();
+  try {
+    const { items, amount } = req.body;
 
-
-  invoice.addItem("Produit Premium", 1, 10000, 10000); nom, quantité, prix , total
-
-  invoice.description = "Achat d’un produit premium";
-  invoice.totalAmount = 10000;
-
-  invoice.create((response) => {
-    if (response.success) {
-      return res.json({
-        success: true,
-        message: 'Facture générée avec succès',
-        redirect_url: invoice.url
-      });
-    } else {
-      return res.status(500).json({
-        success: false,
-        message: response.response_text
-      });
+    // Vérification des données
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({ success: false, message: "Aucun produit dans la commande." });
     }
-  });
+
+    const invoice = new paydunya.CheckoutInvoice();
+
+    // Ajout dynamique des produits du panier
+    items.forEach(item => {
+      // item.name, item.quantity, item.price
+      invoice.addItem(
+        item.name || "Produit",
+        item.quantity || 1,
+        item.price || 1000,
+        (item.price || 1000) * (item.quantity || 1)
+      );
+    });
+
+    invoice.description = "Achat sur Sunubio";
+    invoice.totalAmount = amount;
+
+    invoice.create((response) => {
+      if (response.success) {
+        return res.json({
+          success: true,
+          message: 'Facture générée avec succès',
+          redirectUrl: invoice.url // ⚠️ correspond à ce que le frontend attend
+        });
+      } else {
+        return res.status(500).json({
+          success: false,
+          message: response.response_text
+        });
+      }
+    });
+  } catch (error) {
+    console.error("Erreur PayDunya :", error);
+    return res.status(500).json({
+      success: false,
+      message: "Erreur serveur PayDunya",
+      error: error.message
+    });
+  }
 };
 
 
