@@ -75,18 +75,18 @@ const placeOrderStripe = async (req, res) => {
 // Placing order using paydunya method
 const placeOrderPaydunya = async (req, res) => {
   try {
+    // ⚠️ Ajoute cette ligne pour t'assurer que la config est bien appliquée
+    setup();
+
     const { items, amount } = req.body;
 
-    // Vérification des données
     if (!items || !Array.isArray(items) || items.length === 0) {
       return res.status(400).json({ success: false, message: "Aucun produit dans la commande." });
     }
 
     const invoice = new paydunya.CheckoutInvoice();
 
-    // Ajout dynamique des produits du panier
     items.forEach(item => {
-      // item.name, item.quantity, item.price
       invoice.addItem(
         item.name || "Produit",
         item.quantity || 1,
@@ -103,17 +103,19 @@ const placeOrderPaydunya = async (req, res) => {
         return res.json({
           success: true,
           message: 'Facture générée avec succès',
-          redirectUrl: invoice.url // ⚠️ correspond à ce que le frontend attend
+          redirectUrl: invoice.url
         });
       } else {
+        // Log plus détaillé pour comprendre l’erreur PayDunya
+        console.error("Erreur PayDunya (réponse API):", response);
         return res.status(500).json({
           success: false,
-          message: response.response_text
+          message: response.response_text || "Erreur PayDunya"
         });
       }
     });
   } catch (error) {
-    console.error("Erreur PayDunya :", error);
+    console.error("Erreur PayDunya (catch):", error);
     return res.status(500).json({
       success: false,
       message: "Erreur serveur PayDunya",
@@ -121,7 +123,6 @@ const placeOrderPaydunya = async (req, res) => {
     });
   }
 };
-
 
 // paytech 
 const webhookPaytech = async (req, res) => {
