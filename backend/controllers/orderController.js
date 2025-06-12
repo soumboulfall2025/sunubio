@@ -75,10 +75,13 @@ const placeOrderStripe = async (req, res) => {
 // Placing order using paydunya method
 const placeOrderPaydunya = async (req, res) => {
   try {
-    // ⚠️ Ajoute cette ligne pour t'assurer que la config est bien appliquée
     setup();
 
     const { items, amount } = req.body;
+
+    // Log des données reçues
+    console.log("PayDunya - items reçus :", items);
+    console.log("PayDunya - amount reçu :", amount);
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       return res.status(400).json({ success: false, message: "Aucun produit dans la commande." });
@@ -87,6 +90,7 @@ const placeOrderPaydunya = async (req, res) => {
     const invoice = new paydunya.CheckoutInvoice();
 
     items.forEach(item => {
+      console.log("Ajout item PayDunya :", item);
       invoice.addItem(
         item.name || "Produit",
         item.quantity || 1,
@@ -99,6 +103,9 @@ const placeOrderPaydunya = async (req, res) => {
     invoice.totalAmount = amount;
 
     invoice.create((response) => {
+      // Log de la réponse brute PayDunya
+      console.log("Réponse PayDunya API :", response);
+
       if (response.success) {
         return res.json({
           success: true,
@@ -106,7 +113,6 @@ const placeOrderPaydunya = async (req, res) => {
           redirectUrl: invoice.url
         });
       } else {
-        // Log plus détaillé pour comprendre l’erreur PayDunya
         console.error("Erreur PayDunya (réponse API):", response);
         return res.status(500).json({
           success: false,
