@@ -3,7 +3,7 @@ import userModel from "../models/userModel.js";
 import productModel from "../models/productModel.js";
 
 import paydunya from "paydunya";
-import  "../config/paydunyaConfig.js"
+import   { setup, store } from "../config/paydunyaConfig.js"
 import { io } from "../server.js";
 
 
