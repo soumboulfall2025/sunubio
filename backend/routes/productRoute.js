@@ -3,6 +3,7 @@ import {addProduct,listProduct,removeProduct,singleProduct} from "../controllers
 import upload from "../middleware/multer.js"
 import adminAuth from "../middleware/adminAuth.js"
 import Product from "../models/productModel.js" // <-- Ajoute ceci pour accéder au modèle
+import { authUser, authAdmin } from "../middleware/auth.js";
 
 
 
