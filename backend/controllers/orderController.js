@@ -89,7 +89,7 @@ const placeOrderStripe = async (req, res) => {
 // Placing order using paydunya method
 const placeOrderPaydunya = async (req, res) => {
   try {
-    const { items, amount } = req.body;
+    const { items, amount, address } = req.body;
 
     console.log("PayDunya - items reçus :", items);
     console.log("PayDunya - amount reçu :", amount);
@@ -125,6 +125,7 @@ const placeOrderPaydunya = async (req, res) => {
             userId,
             items,
             amount,
+            address, // Ajoute bien address ici !
             paymentMethod: "paydunya",
             payment: false,
             date: Date.now(),
