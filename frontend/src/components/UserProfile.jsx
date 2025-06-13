@@ -1,19 +1,30 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+const backendUrl = process.env.REACT_APP_BACKEND_URL || "https://sunubio-backend.onrender.com";
+
 const UserProfile = () => {
   const [user, setUser] = useState(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    // Remplace par ton vrai backendUrl
-    axios.get(`${process.env.REACT_APP_BACKEND_URL || "https://sunubio-backend.onrender.com"}/api/user/me`, {
-      headers: { token: localStorage.getItem("token") }
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setError("Vous devez être connecté pour voir votre profil.");
+      return;
+    }
+
+    axios.get(`${backendUrl}/api/user/me`, {
+      headers: { token }
     })
       .then(res => {
         if (res.data.success) setUser(res.data.user);
-      });
+        else setError(res.data.message || "Erreur lors de la récupération du profil.");
+      })
+      .catch(() => setError("Erreur lors de la récupération du profil."));
   }, []);
 
+  if (error) return <div className="text-red-600 my-6">{error}</div>;
   if (!user) return <div>Chargement...</div>;
 
   return (
