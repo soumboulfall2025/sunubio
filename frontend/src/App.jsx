@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import Collection from './pages/Collection'
@@ -18,11 +18,19 @@ import SitemapRedirect from './pages/SitemapRedirect'
 import TawkTo from "./components/TawkTo";
 import UserProfile from './components/UserProfile'
 import ResetPassword from './pages/ResetPassword';
+import WelcomeModal from './components/WelcomeModal'; // Import the WelcomeModal component
 
 
 const App = () => {
+  const [showWelcome, setShowWelcome] = useState(false);
+
+  useEffect(() => {
+    setShowWelcome(true);
+  }, []);
+
   return (
     <div className='px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw] '>
+      <WelcomeModal show={showWelcome} onClose={() => setShowWelcome(false)} />
       <ToastContainer  />
       <Navbar />
       <SearchBar />
