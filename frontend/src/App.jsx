@@ -15,6 +15,7 @@ import SearchBar from './components/SearchBar'
 import { ToastContainer, toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css"
 import SitemapRedirect from './pages/SitemapRedirect'
+import TawkTo from "./components/TawkTo";
 
 
 const App = () => {
@@ -39,6 +40,8 @@ const App = () => {
         <Route path='*' element={<div>404 Not Found</div>} />
       </Routes>
       <Footer />
+      {/* Intégration Tawk.to */}
+      <TawkTo />
     </div>
   )
 }
