@@ -6,6 +6,10 @@ import { ShopContext } from '../context/ShopContext'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 
+function formatAddress(formData) {
+  return `${formData.firstName} ${formData.lastName}, ${formData.street}, ${formData.city}, ${formData.state}, ${formData.zipcode}, ${formData.country}, Tel: ${formData.phone}`;
+}
+
 const PlaceOrder = () => {
   const [method, setMethod] = useState('cod')
   const [orderStatus, setOrderStatus] = useState(null)
