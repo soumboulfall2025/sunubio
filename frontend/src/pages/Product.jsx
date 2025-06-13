@@ -17,17 +17,14 @@ const Product = () => {
   const [refresh, setRefresh] = useState(false)
 
   useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const res = await axios.post("/api/product/single", { id: productId });
-        setProductData(res.data.product);
-        setImage(res.data.product.image[0]);
-      } catch {
-        setProductData(null);
-      }
-    };
-    fetchProduct();
-  }, [productId, refresh]);
+    const found = products.find(item => item._id === productId);
+    if (found) {
+      setProductData(found);
+      setImage(found.image[0]);
+    } else {
+      setProductData(null);
+    }
+  }, [productId, products]);
 
   if (!productData) {
     return (
@@ -62,8 +59,6 @@ const Product = () => {
       toast.error("Erreur lors de l'envoi !");
     }
   };
-
-  console.log("productId envoyé:", productId);
 
   return (
     <div className='border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100'>
