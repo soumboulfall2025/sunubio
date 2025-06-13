@@ -36,6 +36,6 @@ productRouter.get("/bio", async (req, res) => {
 // Ajout des routes pour les avis, questions et réponses aux questions
 productRouter.post("/:productId/review", authUser, addReview);
 productRouter.post("/:productId/question", authUser, addQuestion);
-productRouter.post("/:productId/faq/:faqId/answer", authAdmin, answerQuestion);
+productRouter.post("/:productId/faq/:faqId/answer", adminAuth, answerQuestion);
 
 export default productRouter
