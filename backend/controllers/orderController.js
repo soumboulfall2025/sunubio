@@ -133,10 +133,7 @@ const placeOrderPaydunya = async (req, res) => {
           const newOrder = new orderModel(orderData);
           await newOrder.save();
 
-          // Ajout de points fidélité à l'utilisateur
-          const pointsToAdd = Math.floor(amount / 100);
-          await userModel.findByIdAndUpdate(userId, { $inc: { points: pointsToAdd } });
-
+          
           // Gestion du parrainage : créditer le parrain si c'est le premier achat du filleul
           const user = await userModel.findById(userId);
           if (user.referredBy) {
@@ -254,6 +251,16 @@ const updateStatus = async (req, res) => {
   try {
     const { orderId, status } = req.body
     await orderModel.findByIdAndUpdate(orderId, { status })
+
+    // Si la commande passe à "payé", crédite les points fidélité
+    if (status === "paid") {
+      const order = await orderModel.findById(orderId);
+      if (order) {
+        const pointsToAdd = Math.floor(order.amount / 100);
+        await userModel.findByIdAndUpdate(order.userId, { $inc: { points: pointsToAdd } });
+      }
+    }
+
     res.json({ success: true, message: "Status Updated" })
   } catch (error) {
     console.log(error);
