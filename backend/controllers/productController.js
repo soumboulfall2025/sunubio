@@ -105,4 +105,38 @@ const singleProduct = async (req, res) => {
 
 }
 
+// Ajouter un avis
+export const addReview = async (req, res) => {
+  const { productId } = req.params;
+  const { rating, comment } = req.body;
+  const userId = req.user.id;
+  const userName = req.user.name;
+  await productModel.findByIdAndUpdate(productId, {
+    $push: { reviews: { userId, name: userName, rating, comment } }
+  });
+  res.json({ success: true, message: "Avis ajouté !" });
+};
+
+// Poser une question
+export const addQuestion = async (req, res) => {
+  const { productId } = req.params;
+  const { question } = req.body;
+  const userId = req.user.id;
+  await productModel.findByIdAndUpdate(productId, {
+    $push: { faq: { userId, question, answer: "" } }
+  });
+  res.json({ success: true, message: "Question envoyée !" });
+};
+
+// Répondre à une question (admin)
+export const answerQuestion = async (req, res) => {
+  const { productId, faqId } = req.params;
+  const { answer } = req.body;
+  await productModel.updateOne(
+    { _id: productId, "faq._id": faqId },
+    { $set: { "faq.$.answer": answer } }
+  );
+  res.json({ success: true, message: "Réponse ajoutée !" });
+};
+
 export { addProduct, listProduct, removeProduct, singleProduct }

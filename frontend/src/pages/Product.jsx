@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom'
 import { ShopContext } from '../context/ShopContext'
 import assets from '../assets/assets'
 import RelatedProducts from '../components/RelatedProducts'
+import axios from "axios"
+import { toast } from "react-toastify"
 
 const Product = () => {
   const { productId } = useParams()
@@ -10,6 +12,9 @@ const Product = () => {
   const [productData, setProductData] = useState(null)
   const [image, setImage] = useState("")
   const [size, setSize] = useState("")
+  const [question, setQuestion] = useState("")
+  const [review, setReview] = useState({ rating: 5, comment: "" })
+  const [refresh, setRefresh] = useState(false)
 
   useEffect(() => {
     const found = products.find(item => item._id === productId)
@@ -19,7 +24,7 @@ const Product = () => {
     } else {
       setProductData(null)
     }
-  }, [productId, products])
+  }, [productId, products, refresh])
 
   if (!productData) {
     return (
@@ -28,6 +33,32 @@ const Product = () => {
       </div>
     )
   }
+
+  // Soumettre une question
+  const handleQuestion = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post(`/api/product/${productId}/question`, { question }, { headers: { token: localStorage.getItem("token") } });
+      toast.success("Question envoyée !");
+      setQuestion("");
+      setRefresh(r => !r);
+    } catch {
+      toast.error("Erreur lors de l'envoi !");
+    }
+  };
+
+  // Soumettre un avis
+  const handleReview = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post(`/api/product/${productId}/review`, review, { headers: { token: localStorage.getItem("token") } });
+      toast.success("Avis ajouté !");
+      setReview({ rating: 5, comment: "" });
+      setRefresh(r => !r);
+    } catch {
+      toast.error("Erreur lors de l'envoi !");
+    }
+  };
 
   return (
     <div className='border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100'>
@@ -83,7 +114,7 @@ const Product = () => {
       <div className='mt-20'>
         <div className='flex'>
           <b className='border px-5 py-3 text-sm'>Description</b>
-          <p className='border px-5 py-3 text-sm'>Avis (122)</p>
+          <p className='border px-5 py-3 text-sm'>Avis ({productData.reviews?.length || 0})</p>
         </div>
         <div className='flex flex-col gap-4 border px-6 py-6 text-sm text-gray-500'>
           <p>
@@ -94,6 +125,64 @@ const Product = () => {
           </p>
         </div>
       </div>
+
+      {/* AVIS CLIENTS */}
+      <div className="mt-12">
+        <h3 className="font-bold mb-2">Avis clients</h3>
+        {productData.reviews?.length ? (
+          productData.reviews.map((r, i) => (
+            <div key={i} className="mb-2 border-b pb-2">
+              <b>{r.name}</b> - {r.rating}★<br />
+              <span>{r.comment}</span>
+            </div>
+          ))
+        ) : (
+          <p>Aucun avis pour ce produit.</p>
+        )}
+
+        {/* Laisser un avis */}
+        <form onSubmit={handleReview} className="my-4 flex flex-col gap-2">
+          <label>Votre note :
+            <select value={review.rating} onChange={e => setReview({ ...review, rating: e.target.value })}>
+              {[5,4,3,2,1].map(n => <option key={n} value={n}>{n}★</option>)}
+            </select>
+          </label>
+          <textarea
+            placeholder="Votre avis"
+            value={review.comment}
+            onChange={e => setReview({ ...review, comment: e.target.value })}
+            required
+          />
+          <button type="submit" className="bg-black text-white px-4 py-2 rounded">Envoyer mon avis</button>
+        </form>
+      </div>
+
+      {/* FAQ DYNAMIQUE */}
+      <div className="mt-12">
+        <h3 className="font-bold mb-2">Questions fréquentes</h3>
+        {productData.faq?.length ? (
+          productData.faq.map((q, i) => (
+            <div key={i} className="mb-2 border-b pb-2">
+              <b>Q :</b> {q.question}<br />
+              {q.answer && <span><b>R :</b> {q.answer}</span>}
+            </div>
+          ))
+        ) : (
+          <p>Aucune question pour ce produit.</p>
+        )}
+
+        {/* Poser une question */}
+        <form onSubmit={handleQuestion} className="my-4 flex flex-col gap-2">
+          <textarea
+            placeholder="Posez votre question sur ce produit"
+            value={question}
+            onChange={e => setQuestion(e.target.value)}
+            required
+          />
+          <button type="submit" className="bg-black text-white px-4 py-2 rounded">Envoyer ma question</button>
+        </form>
+      </div>
+
       {/* PRODUITS SIMILAIRES */}
       <RelatedProducts Category={productData.category} sousCategory={productData.subCategory} />
     </div>
