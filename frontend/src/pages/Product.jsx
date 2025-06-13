@@ -17,14 +17,19 @@ const Product = () => {
   const [refresh, setRefresh] = useState(false)
 
   useEffect(() => {
-    const found = products.find(item => item._id === productId)
-    if (found) {
-      setProductData(found)
-      setImage(found.image[0])
-    } else {
-      setProductData(null)
-    }
-  }, [productId, products, refresh])
+    const fetchProduct = async () => {
+      try {
+        const res = await axios.post("/api/product/single", { id: productId });
+        setProductData(res.data.product);
+        setImage(res.data.product.image[0]);
+      } catch {
+        setProductData(null);
+      }
+    };
+
+    fetchProduct();
+    // eslint-disable-next-line
+  }, [productId, refresh])
 
   if (!productData) {
     return (
@@ -170,6 +175,14 @@ const Product = () => {
             <div key={i} className="mb-2 border-b pb-2">
               <b>Q :</b> {q.question}<br />
               {q.answer && <span><b>R :</b> {q.answer}</span>}
+              <a
+                href={`https://wa.me/221787203975?text=Bonjour,%20j'ai%20une%20question%20sur%20le%20produit%20${encodeURIComponent(productData.name)}%20:%20${encodeURIComponent(q.question)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block mt-2 bg-green-700 text-white px-4 py-2 text-xs rounded hover:bg-green-800 active:bg-green-900 transition"
+              >
+                Poser sur WhatsApp
+              </a>
             </div>
           ))
         ) : (
