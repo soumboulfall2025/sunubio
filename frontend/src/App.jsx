@@ -16,6 +16,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css"
 import SitemapRedirect from './pages/SitemapRedirect'
 import TawkTo from "./components/TawkTo";
+import UserProfile from './components/UserProfile'
 
 
 const App = () => {
@@ -36,6 +37,7 @@ const App = () => {
         <Route path='/place-order' element={<PlaceOrder />} />
         <Route path='/orders' element={<Orders />} />
         <Route path='/sitemap.xml' element={<SitemapRedirect />} />
+        <Route path='/profile' element={<UserProfile />} />
 
         <Route path='*' element={<div>404 Not Found</div>} />
       </Routes>

@@ -37,7 +37,21 @@ const placeOrder = async (req, res) => {
     await newOrder.save();
     console.log("Order saved:", newOrder);
 
-    await userModel.findByIdAndUpdate(userId, { cartData: {} });
+    // Ajout de points fidélité à l'utilisateur
+    const pointsToAdd = Math.floor(amount / 100); // 1 point par 100 FCFA
+    await userModel.findByIdAndUpdate(userId, { $inc: { points: pointsToAdd }, cartData: {} });
+
+    // Gestion du parrainage : créditer le parrain si c'est le premier achat du filleul
+    const user = await userModel.findById(userId);
+    if (user.referredBy) {
+      const ordersCount = await orderModel.countDocuments({ userId });
+      if (ordersCount === 1) {
+        await userModel.findOneAndUpdate(
+          { referralCode: user.referredBy },
+          { $inc: { points: 100 } }
+        );
+      }
+    }
 
     // -- ICI émission de la notif --
     io.emit("order-notification", {
@@ -101,10 +115,38 @@ const placeOrderPaydunya = async (req, res) => {
 
     // Utilisation de la promesse pour éviter le blocage
     invoice.create()
-      .then(() => {
+      .then(async () => {
         console.log("Réponse PayDunya API :", invoice);
-        // Accepte "pending" ou "created" comme succès
         if ((invoice.status === "created" || invoice.status === "pending") && invoice.url) {
+          // Création de la commande PayDunya (paiement en attente)
+          const userId = req.user.id;
+          const orderData = {
+            userId,
+            items,
+            amount,
+            paymentMethod: "paydunya",
+            payment: false,
+            date: Date.now(),
+          };
+          const newOrder = new orderModel(orderData);
+          await newOrder.save();
+
+          // Ajout de points fidélité à l'utilisateur
+          const pointsToAdd = Math.floor(amount / 100);
+          await userModel.findByIdAndUpdate(userId, { $inc: { points: pointsToAdd } });
+
+          // Gestion du parrainage : créditer le parrain si c'est le premier achat du filleul
+          const user = await userModel.findById(userId);
+          if (user.referredBy) {
+            const ordersCount = await orderModel.countDocuments({ userId });
+            if (ordersCount === 1) {
+              await userModel.findOneAndUpdate(
+                { referralCode: user.referredBy },
+                { $inc: { points: 100 } }
+              );
+            }
+          }
+
           return res.json({
             success: true,
             message: 'Facture générée avec succès',

@@ -35,50 +35,64 @@ const loginUser = async (req, res) => {
 // routes for user register
 const registerUser = async (req, res) => {
     try {
-        const { name, email, password } = req.body
+        const { name, email, password, referredByCode } = req.body; // Ajoute referredByCode si fourni
 
-        // checking user already exists or not
-
-        const exists = await userModel.findOne({ email })
+        // Vérifier si l'utilisateur existe déjà
+        const exists = await userModel.findOne({ email });
         if (exists) {
-            return res.json({ success: false, message: "User already exists" })
+            return res.json({ success: false, message: "User already exists" });
         }
 
-        // validating email format & strong password
-
+        // Validation email et mot de passe
         if (!validator.isEmail(email)) {
-            return res.json({ success: false, message: "Please enter a valid email  " })
+            return res.json({ success: false, message: "Please enter a valid email" });
         }
-
         if (password.length < 8) {
-            return res.json({ success: false, message: "Please enter a strong password  " })
+            return res.json({ success: false, message: "Please enter a strong password" });
         }
 
+        // Hash du mot de passe
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
-        // hashing user password 
-        const salt = await bcrypt.genSalt(10)
-        const hashedPassword = await bcrypt.hash(password, salt)
+        // Générer un code de parrainage unique
+        let referralCode;
+        let isUnique = false;
+        while (!isUnique) {
+            referralCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+            const codeExists = await userModel.findOne({ referralCode });
+            if (!codeExists) isUnique = true;
+        }
 
-        const newUser = new userModel({
+        // Préparer le nouvel utilisateur
+        const newUserData = {
             name,
             email,
-            password: hashedPassword
-        })
+            password: hashedPassword,
+            referralCode,
+            points: 0
+        };
 
-        const user = await newUser.save()
+        // Gestion du parrainage
+        if (referredByCode) {
+            const parrain = await userModel.findOne({ referralCode: referredByCode });
+            if (parrain) {
+                newUserData.points = 100; // Bonus filleul
+                newUserData.referredBy = referredByCode;
+                // Le parrain sera crédité après le premier achat du filleul
+            }
+        }
 
-        const token = createToken(user.id)
+        const newUser = new userModel(newUserData);
+        const user = await newUser.save();
 
-        res.json({ success: true, token })
+        const token = createToken(user.id);
 
-
-
-
+        res.json({ success: true, token, referralCode: user.referralCode, points: user.points });
 
     } catch (error) {
         console.log(error);
-        res.json({ success: false, message: error.message })
-
+        res.json({ success: false, message: error.message });
     }
 }
 
@@ -100,7 +114,13 @@ const adminLogin = async (req, res) => {
     }
 }
 
+const getUserProfile = async (req, res) => {
+    try {
+        const user = await userModel.findById(req.user.id).select("name email points referralCode referredBy");
+        res.json({ success: true, user });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
 
-
-
-export { loginUser, registerUser, adminLogin }
+export { loginUser, registerUser, adminLogin, getUserProfile }
