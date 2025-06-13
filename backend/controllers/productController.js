@@ -89,11 +89,11 @@ const removeProduct = async (req, res) => {
 // function for single product info
 const singleProduct = async (req, res) => {
     try {
-        const { id } = req.body; // Correction ici !
+        console.log("Reçu dans singleProduct:", req.body);
+        const { id } = req.body;
         const product = await productModel.findById(id);
         res.json({ success: true, product });
     } catch (error) {
-        console.log(error);
         res.json({ success: false, message: error.message });
     }
 }

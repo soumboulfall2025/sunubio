@@ -63,6 +63,8 @@ const Product = () => {
     }
   };
 
+  console.log("productId envoyé:", productId);
+
   return (
     <div className='border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100'>
       {/* PRODUIT BIO */}
