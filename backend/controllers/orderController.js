@@ -93,6 +93,7 @@ const placeOrderPaydunya = async (req, res) => {
 
     console.log("PayDunya - items reçus :", items);
     console.log("PayDunya - amount reçu :", amount);
+    console.log("BODY PAYDUNYA :", req.body);
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       return res.status(400).json({ success: false, message: "Aucun produit dans la commande." });

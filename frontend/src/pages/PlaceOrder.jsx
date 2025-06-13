@@ -116,6 +116,7 @@ const PlaceOrder = () => {
           });
 
           console.log("Réponse complète PayDunya :", response);
+          console.log("orderData envoyé à PayDunya :", orderData);
 
           if (response.data.success && response.data.redirectUrl) {
             const url = response.data.redirectUrl;
