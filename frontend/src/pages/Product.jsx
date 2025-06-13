@@ -153,7 +153,12 @@ const Product = () => {
             onChange={e => setReview({ ...review, comment: e.target.value })}
             required
           />
-          <button type="submit" className="bg-black text-white px-4 py-2 rounded">Envoyer mon avis</button>
+          <button
+            type="submit"
+            className="bg-green-700 text-white px-8 py-3 text-sm rounded hover:bg-green-800 active:bg-green-900 transition"
+          >
+            Envoyer mon avis
+          </button>
         </form>
       </div>
 
@@ -179,7 +184,12 @@ const Product = () => {
             onChange={e => setQuestion(e.target.value)}
             required
           />
-          <button type="submit" className="bg-black text-white px-4 py-2 rounded">Envoyer ma question</button>
+          <button
+            type="submit"
+            className="bg-green-700 text-white px-8 py-3 text-sm rounded hover:bg-green-800 active:bg-green-900 transition"
+          >
+            Envoyer ma question
+          </button>
         </form>
       </div>
 
