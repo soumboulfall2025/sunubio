@@ -17,6 +17,7 @@ import "react-toastify/dist/ReactToastify.css"
 import SitemapRedirect from './pages/SitemapRedirect'
 import TawkTo from "./components/TawkTo";
 import UserProfile from './components/UserProfile'
+import ResetPassword from './pages/ResetPassword';
 
 
 const App = () => {
@@ -38,6 +39,7 @@ const App = () => {
         <Route path='/orders' element={<Orders />} />
         <Route path='/sitemap.xml' element={<SitemapRedirect />} />
         <Route path='/profile' element={<UserProfile />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
 
         <Route path='*' element={<div>404 Not Found</div>} />
       </Routes>
