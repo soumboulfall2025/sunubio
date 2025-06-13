@@ -17,19 +17,14 @@ const Product = () => {
   const [refresh, setRefresh] = useState(false)
 
   useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const res = await axios.post("/api/product/single", { id: productId });
-        setProductData(res.data.product);
-        setImage(res.data.product.image[0]);
-      } catch {
-        setProductData(null);
-      }
-    };
-
-    fetchProduct();
-    // eslint-disable-next-line
-  }, [productId, refresh])
+    const found = products.find(item => item._id === productId);
+    if (found) {
+      setProductData(found);
+      setImage(found.image[0]);
+    } else {
+      setProductData(null);
+    }
+  }, [productId, products, refresh]);
 
   if (!productData) {
     return (
