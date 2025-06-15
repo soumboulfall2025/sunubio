@@ -3,6 +3,7 @@ import cors from "cors"
 import http from "http"
 import { Server } from "socket.io"
 import "dotenv/config"
+import path from "path"
 
 import connectDB from "./config/mongodb.js"
 import connectCloudinary from "./config/cloudinary.js"
@@ -26,7 +27,7 @@ const allowedOrigins = [
   "http://localhost:4000", // Autre port si nécessaire
   "https://sunubio-admin.onrender.com", // Admin Render
   "https://sunubio-frontend.onrender.com", // Frontend Render
-  
+
 ]
 
 const io = new Server(server, {
@@ -48,6 +49,12 @@ async function main() {
     await connectCloudinary()
 
     app.use(express.json())
+
+    
+    const __dirname = path.resolve()
+
+    app.use(express.static(path.join(__dirname, 'public')))
+
 
     // Middleware CORS
     app.use(cors({
