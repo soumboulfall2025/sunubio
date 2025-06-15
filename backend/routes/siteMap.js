@@ -1,34 +1,53 @@
 import express from 'express';
-import Product from '../models/productModel.js'; // adapte le nom du fichier modèle si besoin
+import Product from '../models/productModel.js'; // adapte le chemin et l'extension
 
 const router = express.Router();
 
 router.get('/sitemap.xml', async (req, res) => {
   try {
-    const products = await Product.find(); // Assure-toi que la collection existe
+    const baseUrl = 'https://sunubio-frontend.onrender.com';
 
-    const baseUrl = 'https://www.bambaelectro.com';
+    const staticRoutes = [
+      '/',
+      '/collection',
+      '/about',
+      '/contact',
+      '/cart',
+      '/login',
+      '/place-order',
+      '/orders',
+      '/profile'
+    ];
 
-    let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
-    xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+    let urls = staticRoutes.map(route => `
+      <url>
+        <loc>${baseUrl}${route}</loc>
+        <lastmod>${new Date().toISOString()}</lastmod>
+      </url>
+    `).join('');
 
-    // Pages fixes
-    xml += `  <url><loc>${baseUrl}/</loc><priority>1.0</priority></url>\n`;
-    xml += `  <url><loc>${baseUrl}/product</loc></url>\n`;
-    xml += `  <url><loc>${baseUrl}/contact</loc></url>\n`;
+    const products = await Product.find({}, '_id updatedAt');
 
-    // Pages dynamiques (produits)
-    products.forEach((product) => {
-      xml += `  <url><loc>${baseUrl}/product/${product._id}</loc></url>\n`;
+    products.forEach(product => {
+      urls += `
+      <url>
+        <loc>${baseUrl}/product/${product._id}</loc>
+        <lastmod>${new Date(product.updatedAt || product.createdAt || Date.now()).toISOString()}</lastmod>
+      </url>
+      `;
     });
 
-    xml += `</urlset>`;
+    const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+      ${urls}
+    </urlset>`;
 
     res.header('Content-Type', 'application/xml');
-    res.send(xml);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Erreur lors de la génération du sitemap.');
+    res.send(sitemap);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Erreur lors de la génération du sitemap');
   }
 });
 

@@ -1,16 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset
-      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+<urlset 
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 
+                      http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
-
-<url>
-  <loc>https://sunubio-frontend.onrender.com/</loc>
-  <lastmod>2025-06-13T18:48:46+00:00</lastmod>
-</url>
-
+  <url>
+    <loc>https://sunubio-frontend.onrender.com/</loc>
+    <lastmod>2025-06-13</lastmod>
+  </url>
+  <url>
+    <loc>https://sunubio-frontend.onrender.com/collection</loc>
+    <lastmod>2025-06-13</lastmod>
+  </url>
+  <url>
+    <loc>https://sunubio-frontend.onrender.com/about</loc>
+    <lastmod>2025-06-13</lastmod>
+  </url>
+  <url>
+    <loc>https://sunubio-frontend.onrender.com/contact</loc>
+    <lastmod>2025-06-13</lastmod>
+  </url>
+  <url>
+    <loc>https://sunubio-frontend.onrender.com/cart</loc>
+    <lastmod>2025-06-13</lastmod>
+  </url>
+  <url>
+    <loc>https://sunubio-frontend.onrender.com/login</loc>
+    <lastmod>2025-06-13</lastmod>
+  </url>
+  <url>
+    <loc>https://sunubio-frontend.onrender.com/place-order</loc>
+    <lastmod>2025-06-13</lastmod>
+  </url>
+  <url>
+    <loc>https://sunubio-frontend.onrender.com/orders</loc>
+    <lastmod>2025-06-13</lastmod>
+  </url>
+  <url>
+    <loc>https://sunubio-frontend.onrender.com/profile</loc>
+    <lastmod>2025-06-13</lastmod>
+  </url>
 
 </urlset>
