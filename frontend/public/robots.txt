@@ -1,1 +1,1 @@
-Sitemap: https://sunubio-frontend.onrender.com/sitemap.xml
+Sitemap: https://sunubio-backend.onrender.com/sitemap.xml
