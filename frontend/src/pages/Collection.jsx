@@ -39,70 +39,66 @@ const Collection = () => {
     );
   };
 
-  const applyFilter = () => {
-    let productsCopy = [...products];
-
-    const isSearchActive = showSearch && search.trim() !== "";
-
-    // Si aucun filtre ou recherche active, on affiche tout
-    if (!isSearchActive && Category.length === 0 && SousCategory.length === 0) {
-      setFilterProducts(products);
+  const applyFilterAndSort = () => {
+    if (!products || products.length === 0) {
+      setFilterProducts([]);
       return;
     }
 
-    if (isSearchActive) {
-      productsCopy = productsCopy.filter(item =>
+    let result = [...products];
+
+    // Filtres
+    if (showSearch && search.trim() !== '') {
+      result = result.filter(item =>
         item.name.toLowerCase().includes(search.toLowerCase())
       );
     }
     if (Category.length > 0) {
-      productsCopy = productsCopy.filter(item => Category.includes(item.category));
+      result = result.filter(item => Category.includes(item.category));
     }
     if (SousCategory.length > 0) {
-      productsCopy = productsCopy.filter(item => SousCategory.includes(item.subCategory));
+      result = result.filter(item => SousCategory.includes(item.subCategory));
     }
 
-    setFilterProducts(productsCopy);
-  };
-
-  const sortProduct = () => {
-    let sorted = [...filterProducts];
+    // Tri
     switch (sortType) {
       case 'low-high':
-        sorted.sort((a, b) => a.price - b.price);
+        result.sort((a, b) => a.price - b.price);
         break;
       case 'high-low':
-        sorted.sort((a, b) => b.price - a.price);
+        result.sort((a, b) => b.price - a.price);
         break;
       case 'az':
-        sorted.sort((a, b) => a.name.localeCompare(b.name));
+        result.sort((a, b) => a.name.localeCompare(b.name));
         break;
       case 'za':
-        sorted.sort((a, b) => b.name.localeCompare(a.name));
+        result.sort((a, b) => b.name.localeCompare(a.name));
         break;
       default:
-        break; // Pertinence garde l'ordre existant
+        break; // pertinence = ordre original
     }
-    setFilterProducts(sorted);
+
+    setFilterProducts(result);
   };
 
-  // Appliquer les filtres si catégories ou recherche changent
   useEffect(() => {
-    applyFilter();
-  }, [Category, SousCategory, search, showSearch, products]);
-
-  // Appliquer le tri si type de tri change
-  useEffect(() => {
-    sortProduct();
-  }, [sortType]);
+    applyFilterAndSort();
+  }, [products, search, showSearch, Category, SousCategory, sortType]);
 
   return (
     <div className='flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10'>
-      {/* FILTRES */}
+      {/* Filtres */}
       <div className='min-w-60'>
-        <p onClick={() => setShowFilters(!showFilters)} className='my-2 text-xl cursor-pointer flex items-center gap-2'>
+        <p
+          onClick={() => setShowFilters(!showFilters)}
+          className='my-2 text-xl cursor-pointer flex items-center gap-2'
+        >
           FILTRES
-          <img src={assets.icons.dropdown} className={`h-3 sm:hidden ${showFilters ? 'rotate-90' : ''}`} alt="" />
+          <img
+            src={assets.icons.dropdown}
+            className={`h-3 sm:hidden ${showFilters ? 'rotate-90' : ''}`}
+            alt=""
+          />
         </p>
 
         {/* Catégories */}
@@ -132,7 +128,7 @@ const Collection = () => {
         </div>
       </div>
 
-      {/* CONTENU */}
+      {/* Contenu */}
       <div className='flex-1'>
         <div className='flex justify-between items-center text-base sm:text-2xl mb-4'>
           <Title text1="TOUS" text2="LES PRODUITS" />
