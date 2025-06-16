@@ -19,7 +19,7 @@ const LatestCollection = () => {
       <div className='text-center py-8 text-3xl'>
         <Title text1={"NOUVEAUTÉS"} text2={"BIO"} />
         <p className='w-3/4 m-auto text-xs sm:text-sm md:text-base text-gray-600'>
-          Découvrez les dernières nouveautés bio : huiles, compléments, cosmétiques et bien-être pour une vie plus saine.
+          Découvrez nos toutes dernières nouveautés : soins, accessoires, bien-être, électronique, mode et plus encore !
         </p>
       </div>
       {/* Affichage des produits */}
