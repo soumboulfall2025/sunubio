@@ -41,7 +41,16 @@ const Collection = () => {
 
   const applyFilter = () => {
     let productsCopy = [...products];
-    if (showSearch && search) {
+
+    const isSearchActive = showSearch && search.trim() !== "";
+
+    // Si aucun filtre ou recherche active, on affiche tout
+    if (!isSearchActive && Category.length === 0 && SousCategory.length === 0) {
+      setFilterProducts(products);
+      return;
+    }
+
+    if (isSearchActive) {
       productsCopy = productsCopy.filter(item =>
         item.name.toLowerCase().includes(search.toLowerCase())
       );
@@ -52,6 +61,7 @@ const Collection = () => {
     if (SousCategory.length > 0) {
       productsCopy = productsCopy.filter(item => SousCategory.includes(item.subCategory));
     }
+
     setFilterProducts(productsCopy);
   };
 
@@ -71,15 +81,17 @@ const Collection = () => {
         sorted.sort((a, b) => b.name.localeCompare(a.name));
         break;
       default:
-        applyFilter(); // Pertinence par défaut
+        break; // Pertinence garde l'ordre existant
     }
     setFilterProducts(sorted);
   };
 
+  // Appliquer les filtres si catégories ou recherche changent
   useEffect(() => {
     applyFilter();
   }, [Category, SousCategory, search, showSearch, products]);
 
+  // Appliquer le tri si type de tri change
   useEffect(() => {
     sortProduct();
   }, [sortType]);
