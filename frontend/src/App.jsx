@@ -14,7 +14,6 @@ import Footer from './components/Footer'
 import SearchBar from './components/SearchBar'
 import { ToastContainer, toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css"
-import SitemapRedirect from './pages/SitemapRedirect'
 import TawkTo from "./components/TawkTo";
 import UserProfile from './components/UserProfile'
 import ResetPassword from './pages/ResetPassword';
