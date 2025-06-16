@@ -13,11 +13,9 @@ router.get('/sitemap.xml', async (req, res) => {
       '/collection',
       '/about',
       '/contact',
-      '/cart',
-      '/login',
       '/place-order',
-      '/orders',
-      '/profile'
+      
+      
       // Ajoute ici d'autres pages publiques si besoin
     ];
 
