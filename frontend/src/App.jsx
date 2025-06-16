@@ -45,7 +45,6 @@ const App = () => {
         <Route path='/login' element={<Login />} />
         <Route path='/place-order' element={<PlaceOrder />} />
         <Route path='/orders' element={<Orders />} />
-        <Route path='/sitemap.xml' element={<SitemapRedirect />} />
         <Route path='/profile' element={<UserProfile />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
 
