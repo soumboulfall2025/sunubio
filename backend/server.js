@@ -20,15 +20,16 @@ const app = express()
 const server = http.createServer(app)
 
 const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "http://localhost:4000",
+  "https://sunubio-admin.onrender.com",
+  "https://sunubio-frontend.onrender.com",
+  "https://www.sunuexpressshop.com",
+  "https://sunuexpressshop.com",
+];
 
-  "http://localhost:3000",  // admin local
-  "http://localhost:5173", // Vite par défaut
-  "http://localhost:5174", // Ton port actuel
-  "http://localhost:4000", // Autre port si nécessaire
-  "https://sunubio-admin.onrender.com", // Admin Render
-  "https://sunubio-frontend.onrender.com", // Frontend Render
-
-]
 
 const io = new Server(server, {
   cors: {
