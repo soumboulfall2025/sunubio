@@ -8,7 +8,7 @@ export const ShopContext = createContext();
 const ShopContextProvider = (props) => {
   const currency = "F CFA";
   const delivery_fee = 2000;
-  const backendUrl = "https://sunubio-backend.onrender.com";
+  const backendUrl = import.meta.env.VITE_BACKEND_URL ||  "http://localhost:4000";
 
   const [search, setSearch] = useState("");
   const [showSearch, setShowSearch] = useState(false);
