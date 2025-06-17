@@ -9,9 +9,6 @@ const ShopContextProvider = (props) => {
   const currency = "F CFA";
   const delivery_fee = 2000;
 
-  
-  console.log("Backend URL from env:", import.meta.env.VITE_BACKEND_URL);
-
   const backendUrl = import.meta.env.VITE_BACKEND_URL ||  "http://localhost:4000";
 
   const [search, setSearch] = useState("");

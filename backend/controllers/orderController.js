@@ -8,7 +8,7 @@ import { io } from "../server.js";
 
 
 
-const frontend_URL = "https://sunubio-frontend.onrender.com/"
+const frontend_URL = "https://sunuexpressshop.com"
 
 
 
