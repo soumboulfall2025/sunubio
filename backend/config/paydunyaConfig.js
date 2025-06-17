@@ -12,12 +12,13 @@ const setup = new paydunya.Setup({
 });
 
 const store = new paydunya.Store({
-  name: 'Sunubio & Co',
+  name: 'Sunu Express Shop & Co',
   tagline: 'Votre boutique de confiance',
-  phoneNumber: '787203975',
-  postalAddress: 'Dakar, Sénégal',
-  websiteURL: 'https://sunubio-frontend.onrender.com', // ⚠️ camelCase
-  logoURL: 'https://sunubio-frontend.onrender.com/logo.png', // ⚠️ camelCase
+  phone_number: '787203975',
+  postal_address: 'Dakar, Sénégal',
+  websiteUrl: 'https://www.sunuexpressshop.com',
+  logoUrl: 'https://www.sunuexpressshop.com/logo.png',
 });
+
 
 export { setup, store };
