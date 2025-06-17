@@ -1,23 +1,21 @@
-import express from "express"
-import cors from "cors"
-import http from "http"
-import { Server } from "socket.io"
-import "dotenv/config"
-import path from "path"
+import express from "express";
+import cors from "cors";
+import http from "http";
+import { Server } from "socket.io";
+import "dotenv/config";
+import path from "path";
 
-import connectDB from "./config/mongodb.js"
-import connectCloudinary from "./config/cloudinary.js"
-import userRouter from "./routes/userRoute.js"
-import productRouter from "./routes/productRoute.js"
-import cartRouter from "./routes/cartRoute.js"
-import orderRouter from "./routes/orderRoute.js"
-import siteMap from "./routes/siteMap.js"
+import connectDB from "./config/mongodb.js";
+import connectCloudinary from "./config/cloudinary.js";
+import userRouter from "./routes/userRoute.js";
+import productRouter from "./routes/productRoute.js";
+import cartRouter from "./routes/cartRoute.js";
+import orderRouter from "./routes/orderRoute.js";
+import siteMap from "./routes/siteMap.js";
 
-import dotenv from "dotenv"
-dotenv.config()
-
-const app = express()
-const server = http.createServer(app)
+const app = express();
+const server = http.createServer(app);
+const port = process.env.PORT || 4000;
 
 const allowedOrigins = [
   "http://localhost:3000",
@@ -30,77 +28,77 @@ const allowedOrigins = [
   "https://sunuexpressshop.com",
 ];
 
+// Configuration CORS HTTP (Express)
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS: " + origin));
+    }
+  },
+  credentials: true,
+}));
 
+// WebSocket config
 const io = new Server(server, {
   cors: {
     origin: allowedOrigins,
     methods: ["GET", "POST"],
     credentials: true,
   }
-})
+});
+export { io };
 
-// Exporter l'instance io si tu veux l’utiliser ailleurs
-export { io }
+// Middlewares globaux
+app.use(express.json());
 
-const port = process.env.PORT || 4000
+const __dirname = path.resolve();
+app.use(express.static(path.join(__dirname, 'public')));
 
+// Routes API
+app.use("/api/user", userRouter);
+app.use("/api/product", productRouter);
+app.use("/api/cart", cartRouter);
+app.use("/api/order", orderRouter);
+app.use("/", siteMap);
+
+// Test route
+app.get("/", (req, res) => {
+  res.send("✅ API Running");
+});
+
+// WebSocket logic
+let adminSocketId = null;
+
+io.on("connection", (socket) => {
+  console.log("🟢 Nouvelle connexion socket :", socket.id);
+
+  socket.on("register-admin", () => {
+    adminSocketId = socket.id;
+    console.log("👑 Admin connecté :", adminSocketId);
+  });
+
+  socket.on("disconnect", () => {
+    if (socket.id === adminSocketId) {
+      adminSocketId = null;
+      console.log("👑 Admin déconnecté");
+    }
+  });
+});
+
+// Démarrage du serveur
 async function main() {
   try {
-    await connectDB()
-    await connectCloudinary()
+    await connectDB();
+    await connectCloudinary();
 
-    app.use(express.json())
-
-    
-    const __dirname = path.resolve()
-
-    app.use(express.static(path.join(__dirname, 'public')))
-
-
-    // Middleware CORS
-    app.use(cors({
-      origin: allowedOrigins,
-      credentials: true,
-    }))
-
-    // Routes API
-    app.use("/api/user", userRouter)
-    app.use("/api/product", productRouter)
-    app.use("/api/cart", cartRouter)
-    app.use("/api/order", orderRouter)
-
-    app.use("/", siteMap)
-
-    app.get("/", (req, res) => {
-      res.send("API Working ✅")
-    })
-
-    // Gestion WebSocket
-    let adminSocketId = null
-
-    io.on("connection", (socket) => {
-      console.log("🟢 Socket connecté :", socket.id)
-
-      socket.on("register-admin", () => {
-        adminSocketId = socket.id
-        console.log("👑 Admin enregistré :", adminSocketId)
-      })
-
-      socket.on("disconnect", () => {
-        if (socket.id === adminSocketId) {
-          adminSocketId = null
-          console.log("👑 Admin déconnecté")
-        }
-      })
-    })
-
-    // Lancement du serveur
     server.listen(port, () => {
-      console.log("🚀 Backend + Socket.io démarré sur le port :", port)
-    })
+      console.log("🚀 Serveur démarré sur le port", port);
+    });
   } catch (error) {
-    console.error("❌ Erreur au démarrage :", error)
+    console.error("❌ Erreur au lancement :", error);
   }
 }
 
-main()
+main();
