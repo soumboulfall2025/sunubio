@@ -1,7 +1,7 @@
 // Installer slugify avant d'utiliser ce fichier :
 // npm install slugify
 
-const slugify = require('slugify');
+import slugify from 'slugify';
 
 /**
  * Génère un slug unique basé sur le nom du produit.
@@ -14,4 +14,4 @@ function generateUniqueSlug(productName) {
   return `${baseSlug}-${uniqueSuffix}`;
 }
 
-module.exports = generateUniqueSlug;
+export default generateUniqueSlug;
