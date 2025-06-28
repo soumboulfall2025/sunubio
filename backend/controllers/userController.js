@@ -117,7 +117,7 @@ const adminLogin = async (req, res) => {
 
 const getUserProfile = async (req, res) => {
     try {
-        const user = await userModel.findById(req.user.id).select("name email points referralCode referredBy");
+        const user = await userModel.findById(req.user.id).select("name email phone address points referralCode referredBy");
         res.json({ success: true, user });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });

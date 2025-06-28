@@ -4,6 +4,8 @@ const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    phone: { type: String }, // Ajout du téléphone
+    address: { type: String }, // Ajout de l'adresse
     cartData: { type: Object, default: {} },
     points: { type: Number, default: 0 }, // Points fidélité
     referralCode: { type: String, unique: true, sparse: true }, // Code de parrainage
