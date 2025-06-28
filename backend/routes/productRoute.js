@@ -33,6 +33,19 @@ productRouter.get("/bio", async (req, res) => {
   }
 })
 
+// Route pour récupérer un produit par son slug
+productRouter.get("/slug/:slug", async (req, res) => {
+  try {
+    const product = await Product.findOne({ slug: req.params.slug });
+    if (!product) {
+      return res.status(404).json({ success: false, message: "Produit non trouvé" });
+    }
+    res.json({ success: true, product });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Erreur serveur" });
+  }
+});
+
 // Ajout des routes pour les avis, questions et réponses aux questions
 productRouter.post("/:productId/review", authUser, addReview);
 productRouter.post("/:productId/question", authUser, addQuestion);

@@ -1,7 +1,9 @@
 import mongoose from "mongoose"
+import generateUniqueSlug from "../utils/slug.js";
 
 const productSchema = new mongoose.Schema({
     name: {type:String, required:true},
+    slug: {type:String, unique:true},
     description: {type:String, required:true},
     price: {type:Number, required:true},
     image: {type:Array, required:true},
@@ -28,6 +30,14 @@ const productSchema = new mongoose.Schema({
       }
     ],
 })
+
+// Génération automatique du slug avant sauvegarde
+productSchema.pre("save", function(next) {
+  if (this.isModified("name") || !this.slug) {
+    this.slug = generateUniqueSlug(this.name);
+  }
+  next();
+});
 
 const productModel = mongoose.models.product || mongoose.model("product", productSchema)
 export default productModel

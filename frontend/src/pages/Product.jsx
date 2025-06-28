@@ -8,7 +8,8 @@ import { toast } from "react-toastify"
 import { Helmet } from "react-helmet";
 
 const Product = () => {
-  const { productId } = useParams()
+  // On récupère le slug depuis l'URL
+  const { slug } = useParams();
   const { products, currency, addToCart } = useContext(ShopContext)
   const [productData, setProductData] = useState(null)
   const [image, setImage] = useState("")
@@ -18,14 +19,15 @@ const Product = () => {
   const [refresh, setRefresh] = useState(false)
 
   useEffect(() => {
-    const found = products.find(item => item._id === productId);
+    // Recherche du produit par slug
+    const found = products.find(item => item.slug === slug);
     if (found) {
       setProductData(found);
       setImage(found.image[0]);
     } else {
       setProductData(null);
     }
-  }, [productId, products]);
+  }, [slug, products]);
 
   if (!productData) {
     return (
@@ -39,7 +41,7 @@ const Product = () => {
   const handleQuestion = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`/api/product/${productId}/question`, { question }, { headers: { token: localStorage.getItem("token") } });
+      await axios.post(`/api/product/${productData._id}/question`, { question }, { headers: { token: localStorage.getItem("token") } });
       toast.success("Question envoyée !");
       setQuestion("");
       setRefresh(r => !r);
@@ -52,7 +54,7 @@ const Product = () => {
   const handleReview = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`/api/product/${productId}/review`, review, { headers: { token: localStorage.getItem("token") } });
+      await axios.post(`/api/product/${productData._id}/review`, review, { headers: { token: localStorage.getItem("token") } });
       toast.success("Avis ajouté !");
       setReview({ rating: 5, comment: "" });
       setRefresh(r => !r);

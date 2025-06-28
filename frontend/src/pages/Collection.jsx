@@ -151,6 +151,7 @@ const Collection = () => {
                 key={index}
                 name={item.name}
                 id={item._id}
+                slug={item.slug}
                 price={item.price}
                 image={Array.isArray(item.image) && item.image.length > 0 ? item.image[0] : ''}
               />
