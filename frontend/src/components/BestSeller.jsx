@@ -26,6 +26,7 @@ const BestSeller = () => {
                         <ProductItem
                             key={index}
                             id={item._id}
+                            slug={item.slug}
                             name={item.name}
                             image={Array.isArray(item.image) && item.image.length > 0 ? item.image[0] : ""}
                             price={item.price}

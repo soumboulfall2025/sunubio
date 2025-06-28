@@ -28,6 +28,7 @@ const LatestCollection = () => {
           <ProductItem
             key={index}
             id={item._id}
+            slug={item.slug}
             image={Array.isArray(item.image) && item.image.length > 0 ? item.image[0] : ""}
             name={item.name}
             price={item.price}
